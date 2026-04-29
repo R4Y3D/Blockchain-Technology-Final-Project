@@ -1,9 +1,13 @@
 {
-    "borrower": "Bob",
-    "lender": "Alice",
-    "amount": 100,
+    "borrower": "Genesis",
+    "lender": "Genesis",
+    "amount": 0,
     "prev_block": {
         "hash": "",
         "filename": ""
+    },
+    "proof_of_work": {
+        "nonce": 0,
+        "hash": ""
     }
 }
