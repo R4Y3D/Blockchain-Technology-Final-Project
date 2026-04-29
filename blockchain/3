@@ -1,9 +1,13 @@
 {
-    "borrower": "andrew",
-    "lender": "kate",
-    "amount": 100,
+    "borrower": "Peach",
+    "lender": "Browser",
+    "amount": 200.0,
     "prev_block": {
-        "hash": "f7187cabc49301414a328a6be42c7f68",
+        "hash": "8b4ca2459a2d0223b5b6e03c541560f217a8fc54994587b8ff71877eeeed65c4",
         "filename": "2"
+    },
+    "proof_of_work": {
+        "nonce": 53642,
+        "hash": "0000b9a30a32b5e62d09eebd571b9ed1d4f2ce59c67147b90a1e3e90c172c48b"
     }
 }

@@ -1,9 +1,13 @@
 {
-    "borrower": "andrew",
-    "lender": "kate",
-    "amount": 100,
+    "borrower": "Toad",
+    "lender": "Yoshi ",
+    "amount": 400.0,
     "prev_block": {
-        "hash": "67138f55c20f852c786677830e1ce8ba",
+        "hash": "cb99873c9be45d8b08eca596e020d553499e37756fc803cdf96874aa4bdd2a2b",
         "filename": "3"
+    },
+    "proof_of_work": {
+        "nonce": 72448,
+        "hash": "0000f5dad301690af5e2e5ae5d877fadaa564397dbe77220f13a51236ea378ee"
     }
 }
