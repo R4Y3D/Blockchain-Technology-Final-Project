@@ -1,13 +1,13 @@
 {
-    "borrower": "Mario ",
-    "lender": "Luigi ",
-    "amount": 400.0,
+    "borrower": "Bob",
+    "lender": "Alice",
+    "amount": 100.0,
     "prev_block": {
         "hash": "3c968ea0e9e6ef8d4258c3bf904d7b6211ce73d2c345d8f62a6d6f2813c38532",
         "filename": "1"
     },
     "proof_of_work": {
-        "nonce": 79555,
-        "hash": "0000ca3eed11a0e8373654ce61d4bc5d1ad20d37cf5a76d8f7c98ac8db2ea4a2"
+        "nonce": 16489,
+        "hash": "0000ac8720e24128709f8822199e8b192cc6e9fa56355fe9fab81d4d640b662e"
     }
 }

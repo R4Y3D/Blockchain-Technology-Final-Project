@@ -1,0 +1,13 @@
+{
+    "borrower": "Superman",
+    "lender": "Batman",
+    "amount": 99.0,
+    "prev_block": {
+        "hash": "e5cb11b9447de79d7b6b7ff44202abca615644a89009bfb824c70a8423530090",
+        "filename": "4"
+    },
+    "proof_of_work": {
+        "nonce": 60613,
+        "hash": "000055ff3f07d009c613630c6013bcd21d4ad3a7b7b1ede905d552bdaf16c941"
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "borrower": "professor",
+    "lender": "student",
+    "amount": 1.0,
+    "prev_block": {
+        "hash": "59a00b6eadccf17ea3547286f9d8ea1d7ee231820e4b614ef399725df2130886",
+        "filename": "6"
+    },
+    "proof_of_work": {
+        "nonce": 27951,
+        "hash": "0000dab7f03b559741fbb0a1fda5d7dcace1e1b17f5e663e15d78865fde1f284"
+    }
+}

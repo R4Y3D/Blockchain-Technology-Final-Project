@@ -1,0 +1,14 @@
+{
+    "borrower": "test4",
+    "lender": "test5",
+    "amount": 0.5,
+    "timestamp": 1777481669.0091565,
+    "prev_block": {
+        "hash": "635dce638bd4c12f162c389236932753f0958c83853411cc90c313dd467a68e4",
+        "filename": "8"
+    },
+    "proof_of_work": {
+        "nonce": 88907,
+        "hash": "0000e53fc0d357003d9cc7a73961df4dcaf0b76cfde5be5d8899cdae78701960"
+    }
+}

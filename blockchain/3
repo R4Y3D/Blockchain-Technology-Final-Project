@@ -1,13 +1,13 @@
 {
-    "borrower": "Peach",
-    "lender": "Browser",
-    "amount": 200.0,
+    "borrower": "Mario",
+    "lender": "Luigi",
+    "amount": 50.0,
     "prev_block": {
-        "hash": "8b4ca2459a2d0223b5b6e03c541560f217a8fc54994587b8ff71877eeeed65c4",
+        "hash": "3577bf59401bd8536eba4b565caaef0f5998aa6847896c01a13ae180b237e2e0",
         "filename": "2"
     },
     "proof_of_work": {
-        "nonce": 53642,
-        "hash": "0000b9a30a32b5e62d09eebd571b9ed1d4f2ce59c67147b90a1e3e90c172c48b"
+        "nonce": 4261,
+        "hash": "0000c3e1cc85a3f7d5968d8b3c98303df084791c9e8ab375aeac449864a0f302"
     }
 }
