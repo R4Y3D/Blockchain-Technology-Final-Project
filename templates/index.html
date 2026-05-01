@@ -6,6 +6,20 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <title>Blockchain Loans</title>
+    <style>
+        #verified-badge {
+            font-size: 0.7rem;
+            letter-spacing: 0.03em;
+            padding: 4px 10px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        #verified-badge.is-verified {
+            transform: scale(1.08);
+        }
+        #key-fingerprint {
+            transition: opacity 0.3s ease;
+        }
+    </style>
 </head>
 <body>
 
@@ -18,11 +32,25 @@
                 </div>
 
                 <form id="loan-form" action="{{ url_for('index') }}" method="POST">
+
+                    <!-- Borrower field with live verification badge and key fingerprint -->
                     <div class="mb-3">
-                        <label for="borrower-input" class="form-label">Borrower</label>
+                        <label for="borrower-input" class="form-label d-flex align-items-center gap-2">
+                            Borrower
+                            <span id="verified-badge" class="badge rounded-pill bg-secondary">
+                                ✗ Unverified
+                            </span>
+                        </label>
                         <div class="input-group">
                             <span class="input-group-text" id="borrower-addon">Name</span>
-                            <input type="text" class="form-control" id="borrower-input" aria-describedby="borrower-addon" name="borrower">
+                            <input type="text" class="form-control" id="borrower-input"
+                                   aria-describedby="borrower-addon" name="borrower">
+                        </div>
+                        <!-- Public key fingerprint appears here once a valid key is detected -->
+                        <div id="key-fingerprint" class="mt-1 ps-1" style="display:none;">
+                            <small class="text-muted" style="font-size:0.75rem;">
+                                Key: <span id="key-fingerprint-text" class="font-monospace text-success fw-semibold"></span>
+                            </small>
                         </div>
                     </div>
 
@@ -30,7 +58,8 @@
                         <label for="lender-input" class="form-label">Lender</label>
                         <div class="input-group">
                             <span class="input-group-text" id="lender-addon">Name</span>
-                            <input type="text" class="form-control" id="lender-input" aria-describedby="lender-addon" name="lender">
+                            <input type="text" class="form-control" id="lender-input"
+                                   aria-describedby="lender-addon" name="lender">
                         </div>
                     </div>
 
@@ -38,7 +67,8 @@
                         <label for="amount-input" class="form-label">Amount</label>
                         <div class="input-group">
                             <span class="input-group-text" id="amount-addon">$</span>
-                            <input type="text" class="form-control" id="amount-input" aria-describedby="amount-addon" name="amount">
+                            <input type="text" class="form-control" id="amount-input"
+                                   aria-describedby="amount-addon" name="amount">
                         </div>
                     </div>
 
@@ -46,22 +76,12 @@
                         <label for="private-key-input" class="form-label">
                             Borrower's Private Key
                             <span class="text-muted fw-normal">(optional: signs the transaction)</span>
-                            <span id="key-status-badge" class="badge bg-secondary ms-1">✗ No Key</span>
+                            <span id="key-status-badge" class="badge bg-secondary ms-1"
+                                  style="font-size:0.68rem;">No Key</span>
                         </label>
                         <textarea class="form-control font-monospace" id="private-key-input"
                                   name="private_key" rows="4"
                                   placeholder="Paste your private key here to sign this transaction..."></textarea>
-
-                        <!-- Live public key identity display -->
-                        <div class="mt-2">
-                            <label class="form-label text-muted mb-1" style="font-size:0.85rem;">
-                                Identity (Public Key)
-                            </label>
-                            <textarea class="form-control font-monospace bg-light text-muted"
-                                      id="public-key-display" rows="3" readonly
-                                      placeholder="Unverified / Unsigned: paste a private key above to establish your identity"></textarea>
-                        </div>
-
                         <small class="text-muted">
                             No key? <a href="{{ url_for('keys') }}">Generate one here.</a>
                             Without a key the transaction is saved but unsigned.
@@ -100,38 +120,62 @@
         let debounceTimer = null;
         let keyIsValid = false;
 
-        const privateKeyInput = document.getElementById('private-key-input');
-        const publicKeyDisplay = document.getElementById('public-key-display');
-        const statusBadge     = document.getElementById('key-status-badge');
-        const loanForm        = document.getElementById('loan-form');
+        const privateKeyInput  = document.getElementById('private-key-input');
+        const verifiedBadge    = document.getElementById('verified-badge');
+        const keyFingerprint   = document.getElementById('key-fingerprint');
+        const fingerprintText  = document.getElementById('key-fingerprint-text');
+        const keyStatusBadge   = document.getElementById('key-status-badge');
+        const loanForm         = document.getElementById('loan-form');
+
+        // Extracts the readable base64 content from a PEM string,
+        // then returns the first 20 characters followed by "..."
+        function truncateKey(pem) {
+            const b64 = pem.split('\n')
+                           .filter(l => l.trim() && !l.startsWith('---'))
+                           .join('');
+            return b64.substring(0, 20) + '...';
+        }
 
         function setUnverified() {
             keyIsValid = false;
-            publicKeyDisplay.value = '';
-            publicKeyDisplay.placeholder = 'Unverified / Unsigned: paste a private key above to establish your identity';
-            publicKeyDisplay.classList.remove('text-success', 'text-danger');
-            publicKeyDisplay.classList.add('text-muted');
-            statusBadge.textContent = '✗ No Key';
-            statusBadge.className = 'badge bg-secondary ms-1';
+
+            verifiedBadge.textContent = '✗ Unverified';
+            verifiedBadge.className = 'badge rounded-pill bg-secondary';
+
+            keyFingerprint.style.display = 'none';
+            fingerprintText.textContent = '';
+
+            keyStatusBadge.textContent = 'No Key';
+            keyStatusBadge.className = 'badge bg-secondary ms-1';
+            keyStatusBadge.style.fontSize = '0.68rem';
         }
 
         function setVerified(publicKey) {
             keyIsValid = true;
-            publicKeyDisplay.value = publicKey;
-            publicKeyDisplay.classList.remove('text-muted', 'text-danger');
-            publicKeyDisplay.classList.add('text-success');
-            statusBadge.textContent = '✓ Key Valid';
-            statusBadge.className = 'badge bg-success ms-1';
+
+            verifiedBadge.textContent = '✓ Verified';
+            verifiedBadge.className = 'badge rounded-pill bg-success is-verified';
+
+            fingerprintText.textContent = truncateKey(publicKey);
+            keyFingerprint.style.display = 'block';
+
+            keyStatusBadge.textContent = '✓ Key Valid';
+            keyStatusBadge.className = 'badge bg-success ms-1';
+            keyStatusBadge.style.fontSize = '0.68rem';
         }
 
         function setInvalid() {
             keyIsValid = false;
-            publicKeyDisplay.value = '';
-            publicKeyDisplay.placeholder = 'Invalid key format! Check your private key and try again';
-            publicKeyDisplay.classList.remove('text-muted', 'text-success');
-            publicKeyDisplay.classList.add('text-danger');
-            statusBadge.textContent = '✗ Invalid Key';
-            statusBadge.className = 'badge bg-danger ms-1';
+
+            verifiedBadge.textContent = '✗ Unverified';
+            verifiedBadge.className = 'badge rounded-pill bg-secondary';
+
+            keyFingerprint.style.display = 'none';
+            fingerprintText.textContent = '';
+
+            keyStatusBadge.textContent = '✗ Invalid Key';
+            keyStatusBadge.className = 'badge bg-danger ms-1';
+            keyStatusBadge.style.fontSize = '0.68rem';
         }
 
         privateKeyInput.addEventListener('input', function () {
@@ -141,18 +185,18 @@
                 setUnverified();
                 return;
             }
-            // Show a "checking" state while waiting
-            statusBadge.textContent = '...';
-            statusBadge.className = 'badge bg-warning text-dark ms-1';
+
+            keyStatusBadge.textContent = '...';
+            keyStatusBadge.className = 'badge bg-warning text-dark ms-1';
 
             debounceTimer = setTimeout(async () => {
                 const fd = new FormData();
                 fd.append('private_key', val);
                 const resp = await fetch('/validate-key', { method: 'POST', body: fd });
                 const data = await resp.json();
-                if (data.status === 'valid')   setVerified(data.public_key);
+                if (data.status === 'valid')        setVerified(data.public_key);
                 else if (data.status === 'invalid') setInvalid();
-                else setUnverified();
+                else                                setUnverified();
             }, 400);
         });
 
