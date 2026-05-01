@@ -12,9 +12,12 @@
     <div class="container">
         <div class="row">
             <div class="col-6 mx-auto mt-5">
-                <h1 class="mb-5">Loans</h1>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Loans</h1>
+                    <a href="{{ url_for('keys') }}" class="btn btn-sm btn-outline-warning">Get My Keys</a>
+                </div>
 
-                <form action="{{ url_for('index') }}" method="POST">
+                <form id="loan-form" action="{{ url_for('index') }}" method="POST">
                     <div class="mb-3">
                         <label for="borrower-input" class="form-label">Borrower</label>
                         <div class="input-group">
@@ -37,6 +40,32 @@
                             <span class="input-group-text" id="amount-addon">$</span>
                             <input type="text" class="form-control" id="amount-input" aria-describedby="amount-addon" name="amount">
                         </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="private-key-input" class="form-label">
+                            Borrower's Private Key
+                            <span class="text-muted fw-normal">(optional: signs the transaction)</span>
+                            <span id="key-status-badge" class="badge bg-secondary ms-1">✗ No Key</span>
+                        </label>
+                        <textarea class="form-control font-monospace" id="private-key-input"
+                                  name="private_key" rows="4"
+                                  placeholder="Paste your private key here to sign this transaction..."></textarea>
+
+                        <!-- Live public key identity display -->
+                        <div class="mt-2">
+                            <label class="form-label text-muted mb-1" style="font-size:0.85rem;">
+                                Identity (Public Key)
+                            </label>
+                            <textarea class="form-control font-monospace bg-light text-muted"
+                                      id="public-key-display" rows="3" readonly
+                                      placeholder="Unverified / Unsigned: paste a private key above to establish your identity"></textarea>
+                        </div>
+
+                        <small class="text-muted">
+                            No key? <a href="{{ url_for('keys') }}">Generate one here.</a>
+                            Without a key the transaction is saved but unsigned.
+                        </small>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -66,6 +95,78 @@
             </div>
         </div>
     </div>
+
+    <script>
+        let debounceTimer = null;
+        let keyIsValid = false;
+
+        const privateKeyInput = document.getElementById('private-key-input');
+        const publicKeyDisplay = document.getElementById('public-key-display');
+        const statusBadge     = document.getElementById('key-status-badge');
+        const loanForm        = document.getElementById('loan-form');
+
+        function setUnverified() {
+            keyIsValid = false;
+            publicKeyDisplay.value = '';
+            publicKeyDisplay.placeholder = 'Unverified / Unsigned: paste a private key above to establish your identity';
+            publicKeyDisplay.classList.remove('text-success', 'text-danger');
+            publicKeyDisplay.classList.add('text-muted');
+            statusBadge.textContent = '✗ No Key';
+            statusBadge.className = 'badge bg-secondary ms-1';
+        }
+
+        function setVerified(publicKey) {
+            keyIsValid = true;
+            publicKeyDisplay.value = publicKey;
+            publicKeyDisplay.classList.remove('text-muted', 'text-danger');
+            publicKeyDisplay.classList.add('text-success');
+            statusBadge.textContent = '✓ Key Valid';
+            statusBadge.className = 'badge bg-success ms-1';
+        }
+
+        function setInvalid() {
+            keyIsValid = false;
+            publicKeyDisplay.value = '';
+            publicKeyDisplay.placeholder = 'Invalid key format! Check your private key and try again';
+            publicKeyDisplay.classList.remove('text-muted', 'text-success');
+            publicKeyDisplay.classList.add('text-danger');
+            statusBadge.textContent = '✗ Invalid Key';
+            statusBadge.className = 'badge bg-danger ms-1';
+        }
+
+        privateKeyInput.addEventListener('input', function () {
+            clearTimeout(debounceTimer);
+            const val = this.value.trim();
+            if (!val) {
+                setUnverified();
+                return;
+            }
+            // Show a "checking" state while waiting
+            statusBadge.textContent = '...';
+            statusBadge.className = 'badge bg-warning text-dark ms-1';
+
+            debounceTimer = setTimeout(async () => {
+                const fd = new FormData();
+                fd.append('private_key', val);
+                const resp = await fetch('/validate-key', { method: 'POST', body: fd });
+                const data = await resp.json();
+                if (data.status === 'valid')   setVerified(data.public_key);
+                else if (data.status === 'invalid') setInvalid();
+                else setUnverified();
+            }, 400);
+        });
+
+        loanForm.addEventListener('submit', function (e) {
+            if (!keyIsValid) {
+                const proceed = confirm(
+                    'Warning: No valid private key provided.\n\n' +
+                    'This transaction will be submitted UNSIGNED and UNVERIFIED on the blockchain.\n\n' +
+                    'Continue anyway?'
+                );
+                if (!proceed) e.preventDefault();
+            }
+        });
+    </script>
 
 </body>
 </html>

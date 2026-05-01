@@ -1,14 +1,16 @@
 {
-    "borrower": "test1",
-    "lender": "test2",
-    "amount": 1.0,
-    "timestamp": 1777481652.6684446,
+    "borrower": "Rayed",
+    "lender": "bob",
+    "amount": 450.0,
+    "timestamp": 1777663892.099236,
+    "public_key": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE2IHgfgnRDNBRE5rGebH9LdhG2OWHRxTwGclirs41nj24\nb5UzAaqcd0F9GFDQRHhCCF/Gstd5RjIMXZb96llaJg==\n-----END PUBLIC KEY-----\n",
+    "signature": "e3076c47e494c9eb81d0265ff52c8786a1e3db2808bd256e9abbd08afdea13de4bfded33b987319a422f4c4a2cc247e7aab92296d02274e604f6e007f470d2d5",
     "prev_block": {
-        "hash": "d8b3e78b21f89d136fc8ff3daa9695b4559fbc962d042185168954389c458313",
+        "hash": "0a04a8b481c96923bb21879d2c0ce7df87f52edd62349f5d2abd345f4f3f2b03",
         "filename": "7"
     },
     "proof_of_work": {
-        "nonce": 31092,
-        "hash": "000075ef45fd89b15908ca2e3340f7e562e352b2fe9f9e55da83ba1f80b52a39"
+        "nonce": 188,
+        "hash": "0000826e2aab91f7bbf68898db7c7dc9919d94e5b4bf1925d6fe590f82ae23c4"
     }
 }

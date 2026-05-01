@@ -1,9 +1,0 @@
-{
-    "borrower": "hello",
-    "lender": "world",
-    "amount": "10",
-    "prev_block": {
-        "hash": "fce004f2e7a8df540a3a459954cb0a72",
-        "filename": "13"
-    }
-}

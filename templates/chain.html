@@ -21,9 +21,19 @@
         <div class="card mb-3 {% if block.block_number == 1 %}border-warning{% endif %}">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <strong>Block #{{ block.block_number }}</strong>
-                {% if block.block_number == 1 %}
-                <span class="badge bg-warning text-dark">Genesis</span>
-                {% endif %}
+                <div class="d-flex gap-2 align-items-center">
+                    <!-- Signature status badge -->
+                    {% if block.sig_status == 'valid' %}
+                        <span class="badge bg-success">&#10003; Signature Valid</span>
+                    {% elif block.sig_status == 'invalid' %}
+                        <span class="badge bg-danger">&#10007; Signature Invalid</span>
+                    {% elif block.sig_status == 'unsigned' %}
+                        <span class="badge bg-secondary">Unsigned</span>
+                    {% endif %}
+                    {% if block.block_number == 1 %}
+                        <span class="badge bg-warning text-dark">Genesis</span>
+                    {% endif %}
+                </div>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -33,6 +43,12 @@
                         <p class="mb-1"><strong>Lender:</strong> {{ block.lender }}</p>
                         <p class="mb-1"><strong>Amount:</strong> ${{ "%.2f" | format(block.amount) }}</p>
                         <p class="mb-1"><strong>Timestamp:</strong> {{ block.timestamp_str }}</p>
+                        {% if block.public_key %}
+                        <p class="mb-1 text-break">
+                            <small><strong>Public Key:</strong><br>
+                            <span class="text-secondary">{{ block.public_key[:60] }}...</span></small>
+                        </p>
+                        {% endif %}
                         {% else %}
                         <p class="text-muted fst-italic mb-1">Genesis block &mdash; no transaction data</p>
                         {% endif %}

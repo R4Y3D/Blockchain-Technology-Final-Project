@@ -1,13 +1,16 @@
 {
-    "borrower": "professor",
-    "lender": "student",
-    "amount": 1.0,
+    "borrower": "Alice",
+    "lender": "Bob",
+    "amount": 250.0,
+    "timestamp": 1777663729.8574092,
+    "public_key": "-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEmfxOP91OU6frESnzaRkMuYvA8E1zgicDpuyL3S9dpwfM\nQjzaDsRoUzEGdO+3OlintYfqHTve0btuFJvPTlQI7Q==\n-----END PUBLIC KEY-----\n",
+    "signature": "2eaad0f49b1f29b4ec6a5db35e6cdb0da6f6333ab1775cea17612cc62d4a3ebe98b86e45779ce5a65cd70409bf24e49d8b27babbf96fbb6dc09da82dbdc73af7",
     "prev_block": {
         "hash": "59a00b6eadccf17ea3547286f9d8ea1d7ee231820e4b614ef399725df2130886",
         "filename": "6"
     },
     "proof_of_work": {
-        "nonce": 27951,
-        "hash": "0000dab7f03b559741fbb0a1fda5d7dcace1e1b17f5e663e15d78865fde1f284"
+        "nonce": 12771,
+        "hash": "0000b1fe79b4e3a590469f455f9bb187322c2fdc37b3e5a781c216a8f9246ffc"
     }
 }

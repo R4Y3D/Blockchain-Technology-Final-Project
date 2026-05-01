@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <title>Generate Keys</title>
+</head>
+<body>
+
+    <div class="container mt-5 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Key Generator</h1>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Back to Loans</a>
+        </div>
+
+        <div class="alert alert-warning">
+            <strong>Important:</strong> A new key pair is generated every time you load this page.
+            Copy and save your <strong>Private Key</strong> before leaving. It is never stored on the server.
+            Lose it and you cannot sign transactions as yourself again.
+        </div>
+
+        <!-- Private Key -->
+        <div class="mb-4">
+            <label class="form-label fw-bold">Your Private Key <span class="text-danger">(keep this secret)</span></label>
+            <textarea class="form-control font-monospace" rows="7" id="private-key" readonly>{{ private_key }}</textarea>
+            <div class="mt-2 d-flex gap-2">
+                <button class="btn btn-sm btn-outline-secondary" onclick="copyText('private-key', this)">Copy</button>
+                <button class="btn btn-sm btn-danger" onclick="downloadKey('private-key', 'my_private_key.pem')">Download .pem</button>
+            </div>
+            <small class="text-muted">Paste this into the "Private Key" field on the loan form when submitting a transaction.</small>
+        </div>
+
+        <!-- Public Key -->
+        <div class="mb-4">
+            <label class="form-label fw-bold">Your Public Key <span class="text-success">(safe to share)</span></label>
+            <textarea class="form-control font-monospace" rows="5" id="public-key" readonly>{{ public_key }}</textarea>
+            <div class="mt-2">
+                <button class="btn btn-sm btn-outline-secondary" onclick="copyText('public-key', this)">Copy</button>
+            </div>
+            <small class="text-muted">This is your identity on the blockchain. It is stored inside every block you sign.</small>
+        </div>
+
+        <a href="{{ url_for('keys') }}" class="btn btn-outline-primary">Generate a New Pair</a>
+    </div>
+
+    <script>
+        function copyText(id, btn) {
+            navigator.clipboard.writeText(document.getElementById(id).value);
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy', 1500);
+        }
+
+        function downloadKey(id, filename) {
+            const text = document.getElementById(id).value;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            a.click();
+        }
+    </script>
+
+</body>
+</html>
