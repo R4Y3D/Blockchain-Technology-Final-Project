@@ -3,6 +3,8 @@ Blockchain Technology Final Project by Rayed Jawad &amp; Shamia Shanaha
 
 # Blockchain Loan Ledger
 
+📄 [Read the full paper (PDF)](Design_and_Implementation_of_a_Blockchain_Based_Loan_Ledger_with_Proof_of_Work_and_Digital_Signatures.pdf)
+
 Many people find blockchain hard to understand because the concepts are difficult to picture without a hands-on example. This is a simplified blockchain system that records loan transactions, built as a teaching tool to make those concepts visible and testable. The loan transactions are simulated, but the cryptography and hashing are real.
 
 ## What it does
